@@ -71,6 +71,7 @@ build {
   provisioner "shell" {
     environment_vars = [
       "POSTGRES_VERSION=${var.postgres_version}"
+      "POSTGIS_VERSION=${var.postgis_version}"
     ]
     execute_command = "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}"
     script          = "../scripts/postgres-install.sh"
