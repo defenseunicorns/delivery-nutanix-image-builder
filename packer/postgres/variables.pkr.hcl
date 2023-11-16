@@ -20,6 +20,12 @@ variable "postgres_version" {
   default     = "14"
 }
 
+variable "postgis_version" {
+  type        = string
+  description = "Postgis version to install"
+  default     = "postgis33_14"
+}
+
 variable "image_delete" {
   type        = bool
   description = "Build, but delete the final image rather than saving on Prism Central"
