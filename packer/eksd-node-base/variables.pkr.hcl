@@ -14,18 +14,6 @@ variable "base_image_name" {
   description = "Name of disk image in cluster to use as base image, tested with Ubuntu 20/04 and RHEL 8"
 }
 
-variable "postgres_version" {
-  type        = string
-  description = "Postgres major version to install on the Image"
-  default     = "14"
-}
-
-variable "postgis_version" {
-  type        = string
-  description = "Postgis version to install"
-  default     = "postgis33_14"
-}
-
 variable "image_delete" {
   type        = bool
   description = "Build, but delete the final image rather than saving on Prism Central"

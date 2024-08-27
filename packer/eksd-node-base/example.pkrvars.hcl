@@ -5,5 +5,4 @@ nutanix_cluster   = "my-cluster"
 nutanix_subnet    = "packer-subnet"
 image_delete      = false
 output_image_name = "uds-postgresql"
-postgres_version  = "14"
 base_image_name   = "my-base-image-name"
