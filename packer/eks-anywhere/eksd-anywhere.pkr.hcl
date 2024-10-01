@@ -55,6 +55,11 @@ build {
   name    = local.img_name
   sources = ["source.nutanix.base"]
 
+  provisioner "file" {
+    source      = "../files"
+    destination = "/tmp"
+  }
+
   provisioner "shell" {
     execute_command = "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}"
     script          = "../scripts/eks-anywhere-setup.sh"

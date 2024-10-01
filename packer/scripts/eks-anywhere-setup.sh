@@ -1,4 +1,12 @@
 #!/bin/bash
+# Script installs and configures dependencies needed to both build eks-d node images as well as bootstrap and eks-anywhere environment in an airgapped environment
+
+# Move EKS-A bootrap files somewhere permanent
+config_dir=/eks-anywhere
+file_dir=/tmp/files
+sudo mkdir -p $config_dir
+mv -f $file_dir $config_dir/bootrap-files
+
 sudo yum update -y
 sudo yum install -y git jq unzip make wget, python3.11-pip
 
@@ -12,6 +20,9 @@ brew install gcc
 # Install eks-anywhere and deps needed
 brew install aws/tap/eks-anywhere
 brew install yq
+
+# Install tfk8s which can be used to help convert kubernetes manifests into HCL
+brew install tfk8s
 
 # Install eks-anywhere image-builder
 EKSA_RELEASE_VERSION=$(curl -sL https://anywhere-assets.eks.amazonaws.com/releases/eks-a/manifest.yaml | yq ".spec.latestVersion")
@@ -61,7 +72,7 @@ EOF
 sudo systemctl restart docker
 
 # Startup a registry so there is a registry image baked onto image that can be used to set up a registry mirror in an airgap
-sudo docker run -d -p 5000:5000 --restart=always --name registry registry:2
+sudo docker image pull registry:2
 
 # Install uds which includes tools like zarf, k9s, kubectl, etc
 brew tap defenseunicorns/tap
