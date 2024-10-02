@@ -8,7 +8,7 @@ sudo mkdir -p $config_dir
 mv -f $file_dir $config_dir/bootrap-files
 
 sudo yum update -y
-sudo yum install -y git jq unzip make wget, python3.11-pip
+sudo yum install -y git jq unzip make wget python3.11-pip
 
 # Install brew and related dependencies
 NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
