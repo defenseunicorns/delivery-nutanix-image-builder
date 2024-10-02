@@ -61,7 +61,6 @@ build {
   }
 
   provisioner "shell" {
-    execute_command = "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}"
     script          = "../scripts/eks-anywhere-setup.sh"
     timeout         = "20m"
   }
