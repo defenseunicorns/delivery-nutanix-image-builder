@@ -55,13 +55,9 @@ build {
   name    = local.img_name
   sources = ["source.nutanix.base"]
 
-  provisioner "file" {
-    source      = "../files"
-    destination = "/tmp"
-  }
-
   provisioner "shell" {
-    script          = "../scripts/eks-anywhere-setup.sh"
+    execute_command = "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}"
+    script          = "../scripts/install-deps.sh"
     timeout         = "20m"
   }
 
@@ -71,6 +67,16 @@ build {
     script            = "../scripts/os-stig.sh"
     expect_disconnect = true
     timeout           = "20m"
+  }
+
+  provisioner "file" {
+    source      = "../files"
+    destination = "/tmp"
+  }
+
+  provisioner "shell" {
+    script          = "../scripts/eks-anywhere-setup.sh"
+    timeout         = "20m"
   }
 
   provisioner "shell" {
