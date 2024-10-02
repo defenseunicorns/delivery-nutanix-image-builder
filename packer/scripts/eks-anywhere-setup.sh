@@ -2,10 +2,10 @@
 # Script installs and configures dependencies needed to both build eks-d node images as well as bootstrap and eks-anywhere environment in an airgapped environment
 
 # Move EKS-A bootrap files somewhere permanent
-config_dir=/eks-anywhere
+config_dir=/eks-anywhere-bootstrap
 file_dir=/tmp/files
 sudo mkdir -p $config_dir
-mv -f $file_dir $config_dir/bootrap-files
+sudo mv $file_dir/eks* $config_dir/.
 
 sudo yum update -y
 sudo yum install -y git jq unzip make wget python3.11-pip
