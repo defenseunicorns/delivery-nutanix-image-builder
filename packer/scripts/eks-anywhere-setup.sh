@@ -16,6 +16,7 @@ NONINTERACTIVE=1 CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.c
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 sudo yum groupinstall -y 'Development Tools'
 brew install gcc
+brew install yq
 
 # Install eks-anywhere and deps needed
 curl "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" \
@@ -28,7 +29,6 @@ curl $EKS_ANYWHERE_TARBALL_URL \
     --silent --location \
     | tar xz ./eksctl-anywhere
 sudo install -m 0755 ./eksctl-anywhere /usr/local/bin/eksctl-anywhere
-brew install yq
 
 # Install tfk8s which can be used to help convert kubernetes manifests into HCL
 brew install tfk8s
