@@ -63,3 +63,9 @@ variable "nutanix_subnet" {
   type        = string
   description = "Name of subnet in cluster to use for Packer build VM"
 }
+
+variable "anywhere_version" {
+  type        = string
+  description = "Version of EKS Anywhere plugin to install. Needs to match the version of the anywhere cli image in your eksa registry mirror for airgap installs."
+  default     = "v0.20.3"
+}

@@ -10,7 +10,7 @@ packer {
 }
 
 locals {
-  img_name = var.timestamp ? lower("${var.output_image_name}-${formatdate("YYYYMMDDhhmm", timestamp())}") : lower("${var.output_image_name}")
+  img_name = var.timestamp ? lower("${var.output_image_name}-${var.anywhere_version}-${formatdate("YYYYMMDDhhmm", timestamp())}") : lower("${var.output_image_name}")
 }
 
 source "nutanix" "base" {
@@ -75,6 +75,9 @@ build {
   }
 
   provisioner "shell" {
+    environment_vars = [
+      "ANYWHERE_VERSION=${var.anywhere_version}"
+    ]
     script          = "../scripts/eks-anywhere-setup.sh"
     timeout         = "20m"
   }
