@@ -17,6 +17,7 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 sudo yum groupinstall -y 'Development Tools'
 brew install gcc
 brew install yq
+brew install kubectl
 
 # Install eks-anywhere and deps needed
 curl "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" \
