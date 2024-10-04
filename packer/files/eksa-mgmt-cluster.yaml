@@ -1,0 +1,149 @@
+# Reference resource to create an eks-d management cluster
+# After cluster is created, kubelet CSRs will need signed. Use `kubectl get csr` to get the list of CSRs, and `kubectl certificate approve csr-name csr-name2` to approve the pending CSRs listed
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: Cluster
+metadata:
+  name: mgmt
+spec:
+  registryMirrorConfiguration:
+    endpoint: #anywhere-vm-ip#
+    port: "5000"
+    caCertContent: |
+      -----BEGIN CERTIFICATE-----
+      Insert cert contents here from /mnt/registry-certs/cert.pem
+      -----END CERTIFICATE-----
+  clusterNetwork:
+    cniConfig:
+      cilium: {}
+    pods:
+      cidrBlocks:
+      - 192.168.0.0/16
+    services:
+      cidrBlocks:
+      - 10.96.0.0/12
+  controlPlaneConfiguration:
+    count: 3
+    endpoint:
+      host: #ip to use for external access to kube-api#
+    machineGroupRef:
+      kind: NutanixMachineConfig
+      name: mgmt-cp
+    certSans:
+      - #kube-api hostname if needed#
+      - 10.96.0.1
+      - #ip to use for exteranl access to kube-api#
+    kubeletConfiguration:
+      kind: KubeletConfiguration
+      serverTLSBootstrap: true
+      rotateCertificates: true
+  datacenterRef:
+    kind: NutanixDatacenterConfig
+    name: mgmt
+  externalEtcdConfiguration:
+    count: 3
+    machineGroupRef:
+      kind: NutanixMachineConfig
+      name: mgmt-etcd
+  kubernetesVersion: "1.29"
+  managementCluster:
+    name: mgmt
+  workerNodeGroupConfigurations:
+  - count: 2
+    machineGroupRef:
+      kind: NutanixMachineConfig
+      name: mgmt
+    name: md-0
+    kubeletConfiguration:
+      kind: KubeletConfiguration
+      serverTLSBootstrap: true
+      rotateCertificates: true
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: NutanixDatacenterConfig
+metadata:
+  name: mgmt
+spec:
+  credentialRef:
+    kind: Secret
+    name: nutanix-credentials
+  endpoint: #Prism central IP/hostname#
+  insecure: true #set to false if prism cert is trusted
+  port: 9440
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: NutanixMachineConfig
+metadata:
+  name: mgmt-cp
+spec:
+  cluster:
+    name: # Nutanix cluster name the eks-d cluster will be deployed to
+    type: name
+  image:
+    name: eks-rhel-node-image-1.29 #set to eks node image name from prism that matches the kube version set in the cluster spec. Here we use 1.29
+    type: name
+  memorySize: 12Gi
+  osFamily: redhat
+  subnet:
+    name: # Nutanix subnet name to deploy node into
+    type: name
+  systemDiskSize: 40Gi
+  users:
+  - name: eksa
+    sshAuthorizedKeys:
+    - # SSH public key to use for access to the node vm
+  vcpuSockets: 4
+  vcpusPerSocket: 1
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: NutanixMachineConfig
+metadata:
+  name: mgmt
+spec:
+  cluster:
+    name: # Nutanix cluster name the eks-d cluster will be deployed to
+    type: name
+  image:
+    name: eks-rhel-node-image-1.29 #set to eks node image name from prism that matches the kube version set in the cluster spec. Here we use 1.29
+    type: name
+  memorySize: 16Gi
+  osFamily: redhat
+  subnet:
+    name: # Nutanix subnet name to deploy node into
+    type: name
+  systemDiskSize: 40Gi
+  users:
+  - name: eksa
+    sshAuthorizedKeys:
+    - # SSH public key to use for access to the node vm
+  vcpuSockets: 10
+  vcpusPerSocket: 1
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: NutanixMachineConfig
+metadata:
+  name: mgmt-etcd
+spec:
+  cluster:
+    name: # Nutanix cluster name the eks-d cluster will be deployed to
+    type: name
+  image:
+    name: eks-rhel-node-image-1.29 #set to eks node image name from prism that matches the kube version set in the cluster spec. Here we use 1.29
+    type: name
+  memorySize: 4Gi
+  osFamily: redhat
+  subnet:
+    name: # Nutanix subnet name to deploy node into
+    type: name
+  systemDiskSize: 40Gi
+  users:
+  - name: eksa
+    sshAuthorizedKeys:
+    - # SSH public key to use for access to the node vm
+  vcpuSockets: 2
+  vcpusPerSocket: 1
+
+---
