@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright 2024 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
 
 # Script can be used to create create an airgapped eks-d management cluster
 # Script makes assumption that it is run in the same directory as images.tar file containing eks-d images and eks-anywhere-downloads/ directory both created by eksctl anywhere command
