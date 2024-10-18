@@ -2,6 +2,7 @@
 set -e
 
 sudo subscription-manager repos --enable codeready-builder-for-rhel-8-$(arch)-rpms
+sudo rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
 sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 sudo dnf groupinstall -y "Development Tools"
 sudo dnf install -y zlib-devel readline-devel libicu-devel systemd-devel cmake libxml2-devel proj-devel gdal-devel protobuf-devel json-c-devel
