@@ -1,12 +1,75 @@
 #!/bin/bash
 set -e
 
-wget https://apt.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-RHEL
-sudo rpm --import PGDG-RPM-GPG-KEY-RHEL
-sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-sudo dnf -qy module disable postgresql
-sudo dnf install -y postgresql${POSTGRES_VERSION}-server
-sudo rpm --import http://download.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
+sudo subscription-manager repos --enable codeready-builder-for-rhel-8-$(arch)-rpms
 sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-sudo subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
-sudo dnf install -y ${POSTGIS_VERSION}
+sudo dnf groupinstall -y "Development Tools"
+sudo dnf install -y zlib-devel readline-devel libicu-devel systemd-devel cmake libxml2-devel proj-devel gdal-devel protobuf-devel json-c-devel
+
+sudo dnf -qy module disable postgresql
+
+wget https://ftp.postgresql.org/pub/source/v${POSTGRES_VERSION}/postgresql-${POSTGRES_VERSION}.tar.bz2
+
+tar -xvf postgresql-${POSTGRES_VERSION}.tar.bz2
+cd postgresql-${POSTGRES_VERSION}/
+ls -l
+
+./configure --with-systemd
+make
+sudo su
+make install
+useradd postgres
+exit
+cd
+
+# Install postgis
+## Install GEOS from source
+wget https://download.osgeo.org/geos/geos-3.13.0.tar.bz2
+# Unpack and setup build directory
+tar xvfj geos-3.13.0.tar.bz2
+cd geos-3.13.0
+mkdir _build
+cd _build
+# Set up the build
+cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr/local \
+    ..
+# Run the build, test, install
+make
+ctest
+sudo su
+make install
+exit
+cd
+
+## Install postgis from source
+wget https://postgis.net/stuff/postgis-${POSTGIS_VERSION}.tar.gz
+tar -xvzf postgis-${POSTGIS_VERSION}.tar.gz
+cd postgis-${POSTGIS_VERSION}
+./configure --with-pgconfig=/usr/local/pgsql/bin/pg_config
+make
+sudo su
+make install
+exit
+cd
+
+# Install HA postgres deps
+
+sudo dnf install -y  python3-devel python3-psycopg2 haproxy keepalived
+wget https://github.com/etcd-io/etcd/releases/download/v3.5.16/etcd-v3.5.16-linux-amd64.tar.gz
+tar xzvf etcd-v3.5.16-linux-amd64.tar.gz
+sudo mv etcd-v3.5.16-linux-amd64/etcd* /usr/local/bin/.
+
+sudo pip3 install patroni
+
+# Move files
+
+sudo su
+# Copy the postgres systemd service into the correct location for NDB
+cp /tmp/files/postgres.service /etc/systemd/system/era_postgres.service
+cp /tmp/files/haproxy* /etc/firewalld/services/.
+cd /etc/firewalld/services
+restorecon haproxy-http.xml
+restorecon haproxy-https.xml
+chmod 640 haproxy*

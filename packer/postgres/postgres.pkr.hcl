@@ -69,12 +69,16 @@ build {
     timeout           = "20m"
   }
 
+  provisioner "file" {
+    source      = "../files"
+    destination = "/tmp"
+  }
+
   provisioner "shell" {
     environment_vars = [
       "POSTGRES_VERSION=${var.postgres_version}",
       "POSTGIS_VERSION=${var.postgis_version}"
     ]
-    execute_command = "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}"
     script          = "../scripts/postgres-install.sh"
     timeout         = "15m"
   }

@@ -17,13 +17,13 @@ variable "base_image_name" {
 variable "postgres_version" {
   type        = string
   description = "Postgres major version to install on the Image"
-  default     = "14"
+  default     = "15.8"
 }
 
 variable "postgis_version" {
   type        = string
   description = "Postgis version to install"
-  default     = "postgis33_14"
+  default     = "3.5.0"
 }
 
 variable "image_delete" {
