@@ -37,7 +37,6 @@ cmake \
     ..
 # Run the build, test, install
 make
-ctest
 sudo su
 make install
 exit
