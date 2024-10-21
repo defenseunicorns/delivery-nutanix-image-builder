@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-sudo subscription-manager repos --enable codeready-builder-for-rhel-8-$(arch)-rpms
-sudo rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
-sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-sudo dnf groupinstall -y "Development Tools"
-sudo dnf install -y zlib-devel readline-devel libicu-devel systemd-devel cmake libxml2-devel proj-devel gdal-devel protobuf-devel json-c-devel
+subscription-manager repos --enable codeready-builder-for-rhel-8-$(arch)-rpms
+rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
+dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+dnf groupinstall -y "Development Tools"
+dnf install -y zlib-devel readline-devel libicu-devel systemd-devel cmake libxml2-devel proj-devel gdal-devel protobuf-devel json-c-devel
 
-sudo dnf -qy module disable postgresql
+dnf -qy module disable postgresql
 
 wget https://ftp.postgresql.org/pub/source/v${POSTGRES_VERSION}/postgresql-${POSTGRES_VERSION}.tar.bz2
 
@@ -17,10 +17,8 @@ ls -l
 
 ./configure --with-systemd
 make
-sudo su
 make install
 useradd postgres
-exit
 cd
 
 # Install postgis
@@ -38,9 +36,7 @@ cmake \
     ..
 # Run the build, test, install
 make
-sudo su
 make install
-exit
 cd
 
 ## Install postgis from source
@@ -49,23 +45,20 @@ tar -xvzf postgis-${POSTGIS_VERSION}.tar.gz
 cd postgis-${POSTGIS_VERSION}
 ./configure --with-pgconfig=/usr/local/pgsql/bin/pg_config
 make
-sudo su
 make install
-exit
 cd
 
 # Install HA postgres deps
 
-sudo dnf install -y  python3-devel python3-psycopg2 haproxy keepalived
+dnf install -y  python3-devel python3-psycopg2 haproxy keepalived
 wget https://github.com/etcd-io/etcd/releases/download/v3.5.16/etcd-v3.5.16-linux-amd64.tar.gz
 tar xzvf etcd-v3.5.16-linux-amd64.tar.gz
-sudo mv etcd-v3.5.16-linux-amd64/etcd* /usr/local/bin/.
+mv etcd-v3.5.16-linux-amd64/etcd* /usr/local/bin/.
 
-sudo pip3 install patroni
+pip3 install patroni
 
 # Move files
 
-sudo su
 # Copy the postgres systemd service into the correct location for NDB
 cp /tmp/files/postgres.service /etc/systemd/system/era_postgres.service
 cp /tmp/files/haproxy* /etc/firewalld/services/.

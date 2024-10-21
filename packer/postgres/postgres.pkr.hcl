@@ -75,6 +75,7 @@ build {
   }
 
   provisioner "shell" {
+    execute_command = "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}"
     environment_vars = [
       "POSTGRES_VERSION=${var.postgres_version}",
       "POSTGIS_VERSION=${var.postgis_version}"
