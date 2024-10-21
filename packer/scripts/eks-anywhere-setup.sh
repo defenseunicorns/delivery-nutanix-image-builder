@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright 2024 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
 # Script installs and configures dependencies needed to both build eks-d node images as well as bootstrap and eks-anywhere environment in an airgapped environment
 
 # Move EKS-A bootrap files somewhere permanent

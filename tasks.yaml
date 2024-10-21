@@ -1,0 +1,16 @@
+# Copyright 2024 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
+includes:
+  - lint: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.1.0/tasks/lint.yaml
+
+tasks:
+  - name: default
+    description: Check License
+    actions:
+      - task: lint:license
+
+  - name: fix-license
+    description: Fix License
+    actions:
+      - task: lint:fix-license

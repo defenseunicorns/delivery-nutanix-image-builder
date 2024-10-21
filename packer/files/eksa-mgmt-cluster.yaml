@@ -1,3 +1,6 @@
+# Copyright 2024 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
 # Reference resource to create an eks-d management cluster
 # After cluster is created, kubelet CSRs will need signed. Use `kubectl get csr` to get the list of CSRs, and `kubectl certificate approve csr-name csr-name2` to approve the pending CSRs listed
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
