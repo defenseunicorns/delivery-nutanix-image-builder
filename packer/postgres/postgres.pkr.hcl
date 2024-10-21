@@ -81,7 +81,6 @@ build {
       "POSTGIS_VERSION=${var.postgis_version}"
     ]
     script          = "../scripts/postgres-install.sh"
-    timeout         = "15m"
   }
 
   provisioner "shell" {
