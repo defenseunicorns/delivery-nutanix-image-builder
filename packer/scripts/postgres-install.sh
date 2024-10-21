@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+export PATH=$PATH:/usr/local/bin
 subscription-manager repos --enable codeready-builder-for-rhel-8-$(arch)-rpms
 rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
 dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
