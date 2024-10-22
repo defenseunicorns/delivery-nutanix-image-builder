@@ -6,7 +6,7 @@ subscription-manager repos --enable codeready-builder-for-rhel-8-$(arch)-rpms
 rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
 dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 dnf groupinstall -y "Development Tools"
-dnf install -y zlib-devel readline-devel libicu-devel systemd-devel cmake libxml2-devel proj-devel gdal-devel protobuf-c-devel protobuf-c-compiler protobuf-devel json-c-devel
+dnf install -y zlib-devel readline-devel libicu-devel systemd-devel cmake libxml2-devel proj-devel gdal-devel protobuf-devel protobuf-c-devel json-c-devel
 
 dnf -qy module disable postgresql
 
